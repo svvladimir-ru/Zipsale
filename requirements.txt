@@ -1,0 +1,4 @@
+requests
+pillow
+django==3.2
+python-dotenv==0.17.0
