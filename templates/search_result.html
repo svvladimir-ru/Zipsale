@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Информация о пользователе{% endblock %}
+
+{% block content %}
+
+<div class="title">
+    {% for i in context %}
+    <h1> Название репозитория - {{i.description}} </h1>
+    <p>Ссылка на репозиторий - {{i.html_url}} </p>
+    <p> Количество звезд - {{i.stargazers_count}} </p>
+        {% for e in i.url_pulls %}
+        <p> pull request url - {{e.url}} </p>
+        <p> количество комментариев - {{e.comments_count}}</p>
+        {% endfor %}
+    {% endfor %}
+</div>
+{% if messages %}
+<div class="span12">
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message|safe }}
+    </div>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

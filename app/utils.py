@@ -2,11 +2,48 @@ import os
 import requests
 from dotenv import load_dotenv
 load_dotenv()
+import pprint
 
 
-URL = 'https://api.github.com/users/svvladimir-ru/repos'
+pp = pprint.PrettyPrinter(indent=4)
 params = {
-    "Authorization": f"{os.environ.get('Authorization')}"
+    "Authorization": f"Bearer {os.environ.get('Authorization')}",
+    'Accept': 'application/vnd.github.v3.star+json',
 }
-r = requests.get(url=URL, headers=params)
-print(r.json())
+
+
+def get_json(url):
+    r = requests.get(url=url, headers=params)
+    return r
+
+
+def parser(username):
+    """Парсер данный по api github. На вход принимает username,
+    получает все репозитории, далее проходит циклом по репозиториям,
+    собирает их имя, количество звезд, и ссылку, в первом цикле получаем данные
+    api pull request и передает их во второй цикл. Во втором цикле собирает pull requests репозитория
+    и количество коментариев к каждому pull requests. """
+    url_repos = f'https://api.github.com/users/{username}/repos'
+    repos = get_json(url_repos).json()
+    e = []
+    for i in repos:
+        url_pulls = f'https://api.github.com/repos/{username}/{i["name"]}/pulls'
+        pulls = get_json(url_pulls).json()
+        url_pulls = []
+        for pulls_number in pulls:
+            url_pulls_number = f'https://api.github.com/repos/{username}/{i["name"]}/pulls/{pulls_number["number"]}'
+            comment = get_json(url_pulls_number).json()
+            url_pulls.append({
+                'url': pulls_number['html_url'],
+                'comments_count': comment['comments'],
+            })
+        e.append(
+            {
+                'description': i['name'],
+                'html_url': i['html_url'],
+                'stargazers_count': i['stargazers_count'],
+                'url_pulls': url_pulls,
+            }
+        )
+
+    return e

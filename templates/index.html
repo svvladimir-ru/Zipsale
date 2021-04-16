@@ -7,18 +7,9 @@
 <div class="title">
     <h1> Поиск пользователей github </h1>
 
-    <form method="get">  {# action="{% url 'search_results' %}"#}
+    <form method="get" action="{% url 'search_results' %}">
       <input name="q" type="text" placeholder="Search...">
     </form>
-    {% if messages %}
-        <div class="span12">
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message|safe }}
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
 </div>
 
 {% endblock %}
