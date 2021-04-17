@@ -27,23 +27,24 @@ def parser(username):
     repos = get_json(url_repos).json()
     e = []
     for i in repos:
-        url_pulls = f'https://api.github.com/repos/{username}/{i["name"]}/pulls'
+        url_pulls = f'https://api.github.com/repos/{username}/{i["name"]}/pulls?state=all'
         pulls = get_json(url_pulls).json()
-        url_pulls = []
+        url_pull = []
         for pulls_number in pulls:
             url_pulls_number = f'https://api.github.com/repos/{username}/{i["name"]}/pulls/{pulls_number["number"]}'
             comment = get_json(url_pulls_number).json()
-            url_pulls.append({
+            url_pull.append({
                 'url': pulls_number['html_url'],
                 'comments_count': comment['comments'],
             })
-        e.append(
-            {
-                'description': i['name'],
-                'html_url': i['html_url'],
-                'stargazers_count': i['stargazers_count'],
-                'url_pulls': url_pulls,
-            }
-        )
+        if len(url_pull) > 0:
+            e.append(
+                {
+                    'description': i['name'],
+                    'html_url': i['html_url'],
+                    'stargazers_count': i['stargazers_count'],
+                    'url_pulls': url_pull,
+                }
+            )
 
     return e

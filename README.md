@@ -20,4 +20,4 @@ Authorization=Токен github
 
 
 
-![alt text](screen/screen2.jpg)
+![alt text](screen/img3.png)

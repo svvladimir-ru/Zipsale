@@ -15,9 +15,6 @@ class SearchResultsView(View):
     template_name = 'search_results.html'
 
     def get(self, request):
-        try:
-            username = self.request.GET.get('q')
-            context = parser(username)
-            return render(request, 'search_result.html', {'context': context})
-        except:
-            messages.error(request, 'Пользователь не найден')
+        username = self.request.GET.get('q')
+        context = parser(username)
+        return render(request, 'search_result.html', {'context': context})
